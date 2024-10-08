@@ -1,0 +1,36 @@
+.menu-demo {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 40px;
+  background-color: var(--color-neutral-2);
+}
+/* 
+.menu-demo .arco-menu-inner {
+  overflow-y: auto;
+} */
+
+.layoutContainer {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.menu {
+    display: flex;
+    align-items: center;
+}
+
+.logoItem {
+    padding: 0 !important;
+    margin-right: 20px !important;
+}
+
+.logo {
+    width: 80px;
+    height: auto;
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+}
