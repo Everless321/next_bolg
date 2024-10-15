@@ -1,5 +1,5 @@
 'use client'
-import AdminLayout from "@/app/commpoment/AdminLayout";
+import AdminLayout from "@/app/commpoment/Layout/AdminLayout";
 
 export default function LoginLayout({ children }:  Readonly<{ children: React.ReactNode }>) {
     return (

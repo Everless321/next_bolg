@@ -1,10 +1,18 @@
-import Layout from "@/app/commpoment/AdminLayout";
+'use client'
+import AdminLayout from "@/app/commpoment/Layout/AdminLayout";
+import { useEffect, useState } from "react";
+import { Meta } from "../commpoment/Layout/type";
 
+export default function AdminLayoutWrapper({ children }: Readonly<{ children: React.ReactNode }>) {
+    const [metas, setMetas] = useState<Meta[]>([]);
 
-export default function AdminLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+    useEffect(() => {
+        setMetas([{ title: "首页", href: "/admin" }, { title: "文章列表", href: "/admin/post/" }]);
+    }, []);
+
     return (
         <div>
-        {children}
+            <AdminLayout metas={metas}>{children}</AdminLayout>
         </div>
     )
 }

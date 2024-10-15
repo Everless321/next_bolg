@@ -57,7 +57,7 @@ export default function Register() {
                     </FormItem>
                 </Form>
                 <div className="flex justify-center items-center">
-                    <Link href="/admin/login">
+                    <Link href="/login">
                         已有账户? 登录
                     </Link>
                 </div>

@@ -3,6 +3,11 @@ import { Menu } from "@arco-design/web-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+interface Meta {
+    title: string;
+    href: string;
+}
+
 
 
 const SubMenu = Menu.SubMenu;
@@ -10,7 +15,7 @@ const MenuItem = Menu.Item;
 
 interface LayoutProps {
     children?: React.ReactNode;
-    metas: { title: string, href: string }[];
+    metas: Meta[];
 }
 
 export default function AdminLayout({ children, metas }: LayoutProps) {
@@ -23,7 +28,7 @@ export default function AdminLayout({ children, metas }: LayoutProps) {
                 defaultSelectedKeys={selectedKeys}
 
             >
-                <MenuItem key='0' style={{ padding: 0, marginRight: 38 }} disabled>
+                {/* <MenuItem key='0' style={{ padding: 0, marginRight: 38 }} disabled>
                     <div
                         style={{
                             width: 80,
@@ -32,7 +37,7 @@ export default function AdminLayout({ children, metas }: LayoutProps) {
                             cursor: 'text',
                         }}
                     />
-                </MenuItem>
+                </MenuItem> */}
                 {metas.map((item, index) => (
                     <MenuItem key={String(index + 1)}>
                         <Link href={item.href}>{item.title}</Link>
@@ -43,5 +48,6 @@ export default function AdminLayout({ children, metas }: LayoutProps) {
         </div>
     )
 }
+
 
 

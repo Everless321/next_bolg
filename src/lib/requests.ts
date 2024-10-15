@@ -55,6 +55,7 @@ export function post<T>(endpoint: string, body: any, options: RequestOptions = {
   return request<T>(endpoint, {
     ...options,
     method: 'POST',
+    credentials: 'include',
     body: JSON.stringify(body),
   });
 }
@@ -63,6 +64,7 @@ export function post<T>(endpoint: string, body: any, options: RequestOptions = {
 export function put<T>(endpoint: string, body: any, options: RequestOptions = {}): Promise<T> {
   return request<T>(endpoint, {
     ...options,
+    credentials: 'include',
     method: 'PUT',
     body: JSON.stringify(body),
   });
