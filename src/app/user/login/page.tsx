@@ -20,7 +20,9 @@ export default function Login() {
 		const { username, userpass } = form.getFields();
 
 		try {
-			const response = await post('/admin/login/api', { username, userpass })
+			const response = await post('/user/login/api', { username, userpass })
+			// 登陆成功后跳转首页
+			router.push('/');
 			console.log(response);
 		} catch (error) {
 			setError('发生错误，请稍后重试');
@@ -37,7 +39,7 @@ export default function Login() {
 					<FormItem label='用户名' field='username' required>
 						<Input prefix={<IconUser />} placeholder='请输入用户名' size="large"/>
 					</FormItem>
-					<FormItem label="密码" field="password" required rules={[{required: true, message: '请输入密码'}]}>
+					<FormItem label="密码" field="userpass" required rules={[{required: true, message: '请输入密码'}]}>
 						<Input.Password prefix={<IconLock />} placeholder="请输入密码" size="large" />
 					</FormItem>
 					<FormItem className='mt-auto'>
