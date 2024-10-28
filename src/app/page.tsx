@@ -39,9 +39,9 @@ export default function Home() {
   return (
     <Layout className="h-screen layout-basic-demo">
       <Header>文章列表</Header>
-      <Content className="flex-1 p-4">
+      <Content className="flex-1 p-4 ">
         <List
-          className="list-demo-action-layout "
+          className="list-demo-action-layout p-4"
           
           wrapperStyle={{ maxWidth: 830 }}
           size="large"
@@ -51,12 +51,10 @@ export default function Home() {
           dataSource={data}
           render={(item, index) => (
             <List.Item
+            
               
               actionLayout='vertical'
-              style={{
-                padding: '20px 0',
-                borderBottom: index === data.length - 1 ? 'none' : '1px solid #f0f0f0'
-              }}
+              className="p-2"
               key={index}
               actions={[
                 <span key={1}>
@@ -82,14 +80,20 @@ export default function Home() {
               }
             >
               <List.Item.Meta
-                className="list-item-meta-left ml-2"
+                // className="list-item-meta-left ml-2"
                 avatar={<Avatar shape='square'>
                   <img src={item.avatar} alt="avatar" />
                 </Avatar>}
                 title={<div style={{ textAlign: 'left' }}>{item.title}</div>}
                 description={<div style={{ textAlign: 'left' }}>{item.description}</div>}
               />
+              {item.content}
+              
+             
+              
             </List.Item>
+            
+
           )}
         />
       </Content>

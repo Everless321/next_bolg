@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button, Form, Input } from '@arco-design/web-react';
 import { IconLock, IconUser } from '@arco-design/web-react/icon';
 import { post } from '@/lib/requests';
+import { signIn } from 'next-auth/react';
 
 const FormItem = Form.Item;
 
@@ -16,14 +17,17 @@ export default function Login() {
 	const router = useRouter();
 
 	const handleSubmit = async () => {
+		// "use server"
 		setError('');
 		const { username, userpass } = form.getFields();
 
 		try {
-			const response = await post('/user/login/api', { username, userpass })
-			// 登陆成功后跳转首页
-			router.push('/');
-			console.log(response);
+			const res = await signIn('credentials', {
+				email: username,
+				password: userpass,
+			})
+			console.log(res)
+			
 		} catch (error) {
 			setError('发生错误，请稍后重试');
 		}
