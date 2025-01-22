@@ -1,0 +1,16 @@
+# 项目背景
+这是一个采用nextjs框架开发的博客程序，使用typescript开发，使用tailwindcss进行样式开发，使用prisma进行数据库操作。
+
+#项目风格
+蓝白配色，简洁大方，使用户有良好的阅读体验，希望有类似高山的感觉。
+
+# 项目结构
+- 使用nextjs框架开发，使用typescript开发，使用tailwindcss进行样式开发，使用prisma进行数据库操作。
+- 按照标准nextjs项目结构进行开发，使用app router进行路由开发。
+- 使用prisma进行数据库操作，使用sqlite进行数据库开发。
+- 使用tailwindcss进行样式开发，使用css-in-js进行样式开发。
+- 使用next-auth进行用户认证开发。
+- /src/app/api/route.ts 是一个api路由，用于处理一些因为nextjs路由无法处理的事情，比如调用自定义路由。
+- /src/lib/routerHandler/appRouter.ts 是一个自定义路由处理，用于处理一些因为nextjs路由无法处理的事情，比如调用自定义路由。
+
+

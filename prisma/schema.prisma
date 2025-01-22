@@ -7,7 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model post {
   ID               Int       @id @default(autoincrement())
@@ -23,7 +22,7 @@ model post {
 
 model user {
   ID          Int       @id @default(autoincrement())
-  user_name   String    @db.VarChar(255) @unique
+  user_name   String    @unique @db.VarChar(255)
   nick_name   String?   @db.VarChar(255)
   user_pass   String?   @db.VarChar(255)
   user_status String?   @db.VarChar(255)

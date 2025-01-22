@@ -1,13 +1,6 @@
-import NextAuth from 'next-auth';
-import { NextResponse } from 'next/server';
-
-
-
 // 定义需要排除的路由
-const excludedRoutes = ['/user/login', '/user/login/api'];
+const excludedRoutes = ['/user/login', '/user/login/api', '/user/register', '/user/register/api'];
 export { auth as middleware } from '../auth'
-
-
 
 
 
