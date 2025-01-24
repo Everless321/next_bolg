@@ -12,5 +12,6 @@
 - 使用next-auth进行用户认证开发。
 - /src/app/api/route.ts 是一个api路由，用于处理一些因为nextjs路由无法处理的事情，比如调用自定义路由。
 - /src/lib/routerHandler/appRouter.ts 是一个自定义路由处理，用于处理一些因为nextjs路由无法处理的事情，比如调用自定义路由。
-
+- /lib/db.ts 是一个数据库操作库，用于处理数据库操作。
+- /src/lib/types.ts 是一个类型定义库，用于定义一些常用的类型。
 

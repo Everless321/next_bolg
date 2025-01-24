@@ -3,89 +3,84 @@ import { useEffect, useState } from 'react';
 import { Spin } from '@arco-design/web-react';
 import { useInView } from 'react-intersection-observer';
 import ArticleCard from './ArticleCard';
+import { Article, Post } from '@/lib/types';
 
-interface Article {
-  title: string;
-  description: string;
-  author: {
-    avatar: string;
-    name: string;
-  };
-  stats: {
-    likes: number;
-    stars: number;
-    comments: number;
-  };
-  coverImage?: string;
+
+interface ApiResponse {
+  data: Post[];
+  total: number;
+  page: number;
+  pageSize: number;
 }
 
-const author = {
-  name: "山野",
-  avatar: "/images/ava.jpg"
-};
-
-// 模拟文章数据生成
-const generateArticles = (length: number): Article[] => {
-  const images = [
-    '/images/article-covers/tech1.jpg',
-    '/images/article-covers/tech2.jpg',
-    '/images/article-covers/tech3.jpg',
-    '/images/article-covers/tech4.jpg',
-  ];
-
-  return Array(length).fill(null).map((_, index) => ({
-    title: `探索技术的新高峰：${index + 1}`,
-    description: '在这篇文章中，我们将深入探讨最新的技术趋势和创新方向，帮助您在技术领域攀登新的高峰。从基础理论到实践应用，让我们一起探索技术的无限可能。',
-    author: author,
-    stats: {
-      likes: Math.floor(Math.random() * 1000),
-      stars: Math.floor(Math.random() * 500),
-      comments: Math.floor(Math.random() * 200),
-    },
-    coverImage: images[index % images.length],
-  }));
-};
-
 export default function ArticleList() {
-  const [articles, setArticles] = useState<Article[]>([]);
+  const [articles, setArticles] = useState<Post[]>([]);
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const { ref, inView } = useInView();
+
+  // 获取文章列表
+  const fetchArticles = async (pageNum: number) => {
+    try {
+      setLoading(true);
+      const response = await fetch(`/api/posts?page=${pageNum}&pageSize=6&status=published`);
+      const data: ApiResponse = await response.json();
+      
+      if (pageNum === 1) {
+        setArticles(data.data);
+      } else {
+        setArticles(prev => [...prev, ...data.data]);
+      }
+      
+      setHasMore(data.data.length === data.pageSize);
+    } catch (error) {
+      console.error('Error fetching articles:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // 初始加载
   useEffect(() => {
-    setArticles(generateArticles(6));
+    fetchArticles(1);
   }, []);
 
   // 加载更多
-  const loadMore = async () => {
-    if (loading) return;
-    setLoading(true);
-    // 模拟异步加载
-    setTimeout(() => {
-      setArticles(prev => [...prev, ...generateArticles(3)]);
-      setLoading(false);
-    }, 1000);
-  };
-
-  // 监听滚动到底部
   useEffect(() => {
-    if (inView) {
-      loadMore();
+    if (inView && !loading && hasMore) {
+      setPage(prev => {
+        const nextPage = prev + 1;
+        fetchArticles(nextPage);
+        return nextPage;
+      });
     }
-  }, [inView]);
+  }, [inView, loading, hasMore]);
 
   return (
     <div className="space-y-8">
-      {/* 文章网格 */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
         {articles.map((article, index) => (
-          <ArticleCard key={index} {...article} />
+          <ArticleCard
+            key={`article-${article.ID}-${index}`}
+            title={article.title || '无标题'}
+            description={article.content?.substring(0, 200) || '暂无描述'}
+            author={{
+              name: article.author || '匿名',
+              avatar: '/images/ava.jpg'
+            }}
+            stats={{
+              likes: Math.floor(Math.random() * 1000),
+              stars: Math.floor(Math.random() * 500),
+              comments: Math.floor(Math.random() * 200),
+            }}
+          />
         ))}
       </div>
 
-      {/* 加载更多指示器 */}
       <div ref={ref} className="flex justify-center py-8">
         {loading && <Spin dot />}
+        {!hasMore && <p className="text-gray-500">没有更多文章了</p>}
       </div>
     </div>
   );

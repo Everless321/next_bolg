@@ -3,15 +3,8 @@ import { Table, Button, Space, Message, Modal } from '@arco-design/web-react';
 import { IconEdit, IconDelete } from '@arco-design/web-react/icon';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-
-interface Post {
-  id: number;
-  title: string;
-  status: string;
-  createdAt: string;
-  updatedAt: string;
-  views: number;
-}
+import {  Post } from '@/lib/types';
+import { Dialog } from '@/components/ui/dialog';
 
 export default function PostManagement() {
   const [data, setData] = useState<Post[]>([]);
@@ -82,7 +75,7 @@ export default function PostManagement() {
   const columns = [
     {
       title: 'ID',
-      dataIndex: 'id',
+      dataIndex: 'ID',
       width: 80,
     },
     {
@@ -102,13 +95,13 @@ export default function PostManagement() {
     },
     {
       title: '创建时间',
-      dataIndex: 'createdAt',
+      dataIndex: 'createTime',
       width: 150,
       render: (date: string) => new Date(date).toLocaleDateString(),
     },
     {
       title: '更新时间',
-      dataIndex: 'updatedAt',
+      dataIndex: 'lastUpdateTime',
       width: 150,
       render: (date: string) => new Date(date).toLocaleDateString(),
     },
@@ -124,8 +117,8 @@ export default function PostManagement() {
       title: '操作',
       width: 200,
       render: (_: unknown, record: Post) => (
-        <Space>
-          <Link href={`/admin/post/${record.id}/edit`}>
+        <Space key={record.ID}>
+          <Link href={`/admin/post/${record.ID}/edit`}>
             <Button type="text" icon={<IconEdit />}>
               编辑
             </Button>
@@ -134,7 +127,7 @@ export default function PostManagement() {
             type="text"
             status="danger"
             icon={<IconDelete />}
-            onClick={() => handleDelete(record.id)}
+            onClick={() => handleDelete(record.ID)}
           >
             删除
           </Button>
@@ -154,6 +147,7 @@ export default function PostManagement() {
 
       <div className="bg-white rounded-lg">
         <Table
+          rowKey="ID"
           loading={loading}
           columns={columns}
           data={data}
@@ -167,6 +161,8 @@ export default function PostManagement() {
             onChange: handlePageChange,
           }}
         />
+
+        
       </div>
     </div>
   );

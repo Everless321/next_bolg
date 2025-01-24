@@ -64,7 +64,7 @@ export default function AdminLayout({ children, metas }: AdminLayoutProps) {
       >
         <div className="h-16 flex items-center justify-center border-b border-gray-200">
           <span className="text-lg font-semibold text-blue-600">
-            {collapsed ? 'MB' : 'Mountain Blog'}
+            {collapsed ? 'MB' : 'Everless Blog'}
           </span>
         </div>
         <Menu

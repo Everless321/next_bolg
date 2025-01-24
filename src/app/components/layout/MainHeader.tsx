@@ -1,6 +1,5 @@
 'use client'
 import { Layout } from '@arco-design/web-react';
-import SystemMonitor from '../dashboard/SystemMonitor';
 import { useEffect, useState } from 'react';
 
 const { Header } = Layout;
@@ -45,26 +44,23 @@ export default function MainHeader() {
           <div className="flex items-center space-x-8">
             <div>
               <h1 className={`font-bold transition-all duration-300 ${
-                scrolled ? 'text-xl text-gray-800' : 'text-2xl text-white'
-              }`}>Mountain Blog</h1>
-              <p className={`transition-all duration-300 ${
-                scrolled ? 'text-xs text-gray-600' : 'text-sm text-gray-100'
-              }`}>探索技术的高峰</p>
+                scrolled ? 'text-xl text-gray-800' : 'text-2xl text-black drop-shadow-lg'
+              }`}>Everless Blog</h1>
+              <p className={`font-medium transition-all duration-300 ${
+                scrolled ? 'text-xs text-gray-600' : 'text-sm text-black/90 drop-shadow-md'
+              }`}>Boundless Climb</p>
             </div>
             <nav className="hidden md:flex space-x-6">
-              <a href="/" className={`transition-colors ${
-                scrolled ? 'text-gray-600 hover:text-gray-900' : 'text-gray-100 hover:text-white'
+              <a href="/" className={`font-medium transition-colors duration-300 ${
+                scrolled ? 'text-gray-600 hover:text-gray-900' : 'text-black hover:text-white/80 drop-shadow-md'
               }`}>首页</a>
-              <a href="/articles" className={`transition-colors ${
-                scrolled ? 'text-gray-600 hover:text-gray-900' : 'text-gray-100 hover:text-white'
+              <a href="/articles" className={`font-medium transition-colors duration-300 ${
+                scrolled ? 'text-gray-600 hover:text-gray-900' : 'text-black hover:text-white/80 drop-shadow-md'
               }`}>文章</a>
-              <a href="/about" className={`transition-colors ${
-                scrolled ? 'text-gray-600 hover:text-gray-900' : 'text-gray-100 hover:text-white'
+              <a href="/about" className={`font-medium transition-colors duration-300 ${
+                scrolled ? 'text-gray-600 hover:text-gray-900' : 'text-black hover:text-white/80 drop-shadow-md'
               }`}>关于</a>
             </nav>
-          </div>
-          <div className="flex items-center space-x-4">
-            <SystemMonitor />
           </div>
         </div>
       </Header>

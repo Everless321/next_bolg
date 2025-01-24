@@ -1,13 +1,13 @@
-// 定义需要排除的路由
-const excludedRoutes = ['/user/login', '/user/login/api', '/user/register', '/user/register/api'];
 export { auth as middleware } from '../auth'
-
-
 
 export const config = {
   matcher: [
+    // 管理员路由保护
     '/admin/:path*',
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    // 用户相关路由保护（排除登录和注册页面）
+    '/user/:path*',
+    // 保护其他路由，但排除一些公共资源
+    '/((?!api|_next/static|_next/image|favicon.ico|user/login|user/register).*)',
   ],
 };
 

@@ -10,23 +10,72 @@ datasource db {
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model post {
   ID               Int       @id @default(autoincrement())
-  post_title       String?   @db.VarChar(255)
-  post_content     String?   @db.Text
-  post_author      String?   @db.VarChar(255)
-  create_time      DateTime? @db.DateTime(0)
-  last_update_time DateTime? @db.DateTime(0)
-  post_order       String?   @db.VarChar(255)
-  post_password    String?   @db.VarChar(255)
-  post_status      String?   @db.VarChar(255)
+  title            String?   @db.VarChar(255)
+  content          String?   @db.Text
+  description      String?   @db.Text                    // 文章描述/摘要
+  keywords         String?   @db.VarChar(255)           // 关键词，用逗号分隔
+  author           String?   @db.VarChar(255)
+  createTime       DateTime? @map("create_time") @db.DateTime(0)
+  lastUpdateTime   DateTime? @map("last_update_time") @db.DateTime(0)
+  order            String?   @db.VarChar(255)
+  password         String?   @db.VarChar(255)
+  status           String?   @db.VarChar(255)
+  viewCount        Int       @default(0) @map("view_count")    // 浏览次数
+  coverImage       String?   @map("cover_image") @db.VarChar(255)  // 封面图片
+  categoryId       Int?      @map("category_id")               // 分类ID
+  category         category? @relation(fields: [categoryId], references: [ID])
+  tags             postTag[]                                   // 文章标签关联
+  comments         comment[]                                   // 文章评论关联
 }
 
 model user {
   ID          Int       @id @default(autoincrement())
-  user_name   String    @unique @db.VarChar(255)
-  nick_name   String?   @db.VarChar(255)
-  user_pass   String?   @db.VarChar(255)
-  user_status String?   @db.VarChar(255)
-  create_time DateTime? @db.DateTime(0)
-  lats_time   DateTime? @db.DateTime(0)
-  user_email  String?   @db.VarChar(255)
+  userName    String    @map("user_name") @unique @db.VarChar(255)
+  nickName    String?   @map("nick_name") @db.VarChar(255)
+  userPass    String?   @map("user_pass") @db.VarChar(255)
+  userStatus  String?   @map("user_status") @db.VarChar(255)
+  createTime  DateTime? @map("create_time") @db.DateTime(0)
+  latsTime    DateTime? @map("lats_time") @db.DateTime(0)
+  userEmail   String?   @map("user_email") @db.VarChar(255)
+  avatar      String?   @db.VarChar(255)                      // 用户头像
+  bio         String?   @db.Text                              // 用户简介
+  comments    comment[]                                       // 用户评论关联
+}
+
+model category {
+  ID          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(255)                      // 分类名称
+  description String?  @db.Text                              // 分类描述
+  createTime  DateTime @default(now()) @map("create_time")
+  posts       post[]                                         // 分类下的文章
+}
+
+model tag {
+  ID          Int       @id @default(autoincrement())
+  name        String    @unique @db.VarChar(255)             // 标签名称
+  description String?   @db.Text                             // 标签描述
+  createTime  DateTime  @default(now()) @map("create_time")
+  posts       postTag[]                                      // 标签关联的文章
+}
+
+model postTag {
+  postId    Int      @map("post_id")
+  tagId     Int      @map("tag_id")
+  post      post     @relation(fields: [postId], references: [ID])
+  tag       tag      @relation(fields: [tagId], references: [ID])
+  @@id([postId, tagId])
+}
+
+model comment {
+  ID          Int       @id @default(autoincrement())
+  content     String    @db.Text                             // 评论内容
+  createTime  DateTime  @default(now()) @map("create_time")
+  postId      Int       @map("post_id")                      // 关联的文章
+  userId      Int       @map("user_id")                      // 评论用户
+  parentId    Int?      @map("parent_id")                    // 父评论ID
+  post        post      @relation(fields: [postId], references: [ID])
+  user        user      @relation(fields: [userId], references: [ID])
+  parent      comment?  @relation("CommentToComment", fields: [parentId], references: [ID])
+  replies     comment[] @relation("CommentToComment")
+  status      String    @default("active") @db.VarChar(50)   // 评论状态
 }

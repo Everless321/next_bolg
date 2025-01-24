@@ -8,7 +8,7 @@ class InvalidLoginError extends CredentialsSignin {
 async function getUserFromDatabase(username: string) {
   const user = prisma.user.findUnique({
     where: {
-      user_name: username
+      userName: username
     }
   })
   return user;
@@ -22,17 +22,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       authorize: async (credential) => {
         try {
+          console.log(credential)
           let user = null
           const { email, password } = credential as { email: string; password: string }
+
           user = await getUserFromDatabase(email)
           console.log(user)
           // 判断密码是否相同，目前密码没有加密
-          if (user?.user_pass === password) {
+          if (user?.userPass === password) {
 
             return {
               id: user?.ID?.toString(), // 将number转换为string
-              name: user?.user_name,
-              email: user?.user_email,
+              name: user?.userName,
+              email: user?.userEmail,
             }
           }
           else {

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Form, Input, Button, Message, Select } from '@arco-design/web-react';
 import { useRouter } from 'next/navigation';
 import { Editor } from '@/components/editor';
+import {MDEitor} from '@uiw/react-md-editor';
 
 const FormItem = Form.Item;
 
@@ -27,7 +28,7 @@ export default function NewPost() {
 
     try {
       setLoading(true);
-      const response = await fetch('/api/posts', {
+      const response = await fetch('/admin/post/new/api', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -84,7 +85,14 @@ export default function NewPost() {
             label="内容"
             field="content"
           >
-            <Editor value={content} onChange={setContent} />
+            {/* <MDEitor
+            value={content}
+            onChange={setContent}
+            > */}
+
+            </MDEitor>
+            
+            
           </FormItem>
 
           <FormItem

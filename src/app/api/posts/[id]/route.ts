@@ -1,27 +1,22 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/db';
+import { Post } from '@/lib/types';
 
-interface DatabasePost {
-  ID: number;
-  post_title: string | null;
-  post_content: string | null;
-  post_status: string | null;
-  create_time: Date | null;
-  last_update_time: Date | null;
-  post_order: string | null;
-}
 
-// 获取单个文章
+
+// 获取单篇文章
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
+    
     const post = await prisma.post.findUnique({
       where: {
-        ID: parseInt(params.id)
+        ID: parseInt(id)
       }
-    }) as DatabasePost | null;
+    }) as Post | null;
 
     if (!post) {
       return NextResponse.json(
@@ -31,13 +26,8 @@ export async function GET(
     }
 
     return NextResponse.json({
-      id: post.ID,
-      title: post.post_title || '',
-      content: post.post_content || '',
-      status: post.post_status || 'draft',
-      createdAt: post.create_time?.toISOString() || '',
-      updatedAt: post.last_update_time?.toISOString() || '',
-      views: parseInt(post.post_order || '0')
+
+      ...post
     });
   } catch (error) {
     console.error('获取文章失败:', error);
@@ -51,30 +41,27 @@ export async function GET(
 // 更新文章
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const body = await request.json();
+    const now = new Date();
+
     const post = await prisma.post.update({
       where: {
-        ID: parseInt(params.id)
+        ID: parseInt(id)
       },
       data: {
-        post_title: body.title,
-        post_content: body.content,
-        post_status: body.status,
-        last_update_time: new Date()
+        title: body.title,
+        content: body.content,
+        status: body.status,
+        lastUpdateTime: now
       }
-    }) as DatabasePost;
+    }) as Post;
 
     return NextResponse.json({
-      id: post.ID,
-      title: post.post_title || '',
-      content: post.post_content || '',
-      status: post.post_status || 'draft',
-      createdAt: post.create_time?.toISOString() || '',
-      updatedAt: post.last_update_time?.toISOString() || '',
-      views: parseInt(post.post_order || '0')
+      ...post
     });
   } catch (error) {
     console.error('更新文章失败:', error);
@@ -88,12 +75,14 @@ export async function PUT(
 // 删除文章
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
+    
     await prisma.post.delete({
       where: {
-        ID: parseInt(params.id)
+        ID: parseInt(id)
       }
     });
 
