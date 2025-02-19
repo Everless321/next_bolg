@@ -11,11 +11,13 @@ const titleSchema = z.object({
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
+  baseURL: "https://api.x.ai/v1"
+
 });
 
 export async function generateArticleMetadata(articleContent: string) {
     const response = await openai.beta.chat.completions.parse({
-        model:"gpt-4o-mini",
+        model:"grok-2-latest",
         messages:[
             {
                 role: "system",

@@ -40,6 +40,7 @@ export default function EditPostForm({ post }: EditPostFormProps) {
       router.push('/admin/post');
       router.refresh();
     } catch (error) {
+      console.error('文章更新失败', error);
       Message.error('文章更新失败');
     } finally {
       setSubmitting(false);

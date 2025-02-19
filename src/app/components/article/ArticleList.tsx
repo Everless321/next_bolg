@@ -3,8 +3,7 @@ import { useEffect, useState } from 'react';
 import { Spin } from '@arco-design/web-react';
 import { useInView } from 'react-intersection-observer';
 import ArticleCard from './ArticleCard';
-import { Article, Post } from '@/lib/types';
-
+import { Post } from '@/lib/types';
 
 interface ApiResponse {
   data: Post[];
@@ -16,7 +15,7 @@ interface ApiResponse {
 export default function ArticleList() {
   const [articles, setArticles] = useState<Post[]>([]);
   const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const { ref, inView } = useInView();
 
@@ -43,13 +42,13 @@ export default function ArticleList() {
 
   // 初始加载
   useEffect(() => {
-    fetchArticles(1);
+    fetchArticles(currentPage);
   }, []);
 
   // 加载更多
   useEffect(() => {
     if (inView && !loading && hasMore) {
-      setPage(prev => {
+      setCurrentPage(prev => {
         const nextPage = prev + 1;
         fetchArticles(nextPage);
         return nextPage;
@@ -63,6 +62,7 @@ export default function ArticleList() {
         {articles.map((article, index) => (
           <ArticleCard
             key={`article-${article.ID}-${index}`}
+            id={article.ID}
             title={article.title || '无标题'}
             description={article.content?.substring(0, 200) || '暂无描述'}
             author={{

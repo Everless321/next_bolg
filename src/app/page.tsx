@@ -59,16 +59,16 @@ const treeData = [
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
-  const [showSnowStorm, setShowSnowStorm] = useState(true);
+  // const [showSnowStorm, setShowSnowStorm] = useState(true);
 
   useEffect(() => {
     setMounted(true);
     // 3秒后关闭暴风雪效果
-    const timer = setTimeout(() => {
-      setShowSnowStorm(false);
-    }, 3000);
+    // const timer = setTimeout(() => {
+    //   setShowSnowStorm(false);
+    // }, 3000);
 
-    return () => clearTimeout(timer);
+    // return () => clearTimeout(timer);
   }, []);
 
   if (!mounted) {
@@ -81,8 +81,8 @@ export default function Home() {
 
   return (
     <>
-      <SnowStorm isActive={showSnowStorm} />
-      <div className={`transition-all duration-1000 ${showSnowStorm ? 'brightness-50' : 'brightness-100'}`}>
+      {/* <SnowStorm isActive={showSnowStorm} /> */}
+      <div className={`transition-all duration-1000 brightness-100`}>
         <Layout className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
           <MainHeader />
           <Layout className="container mx-auto px-4 py-6">
