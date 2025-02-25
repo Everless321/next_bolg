@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import { Spin } from '@arco-design/web-react';
-import { IconHeart, IconStar, IconMessage, IconClose } from '@arco-design/web-react/icon';
+import { IconHeart, IconStar, IconMessage, IconClose, IconLink } from '@arco-design/web-react/icon';
 import Image from 'next/image';
 import { Post } from '@/lib/types';
 import dynamic from 'next/dynamic';
 import '@uiw/react-markdown-preview/markdown.css';
+import { useRouter } from 'next/navigation';
 
 const MarkdownPreview = dynamic(
   () => import('@uiw/react-markdown-preview').then((mod) => mod.default),
@@ -24,7 +25,7 @@ interface ArticleDetailDialogProps {
 export default function ArticleDetailDialog({ postId, onClose }: ArticleDetailDialogProps) {
   const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isFullscreen, setIsFullscreen] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -48,13 +49,11 @@ export default function ArticleDetailDialog({ postId, onClose }: ArticleDetailDi
     };
   }, [postId]);
 
-  const handleFullscreenToggle = () => {
-    if (isFullscreen) {
-      document.exitFullscreen().catch(console.error);
-    } else {
-      document.documentElement.requestFullscreen().catch(console.error);
-    }
-    setIsFullscreen(!isFullscreen);
+  // 跳转到文章详情页
+  const handleGoToDetailPage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    router.push(`/post/${postId}`);
+    onClose(); // 关闭弹窗
   };
 
   const handleClose = (e: React.MouseEvent) => {
@@ -71,7 +70,7 @@ export default function ArticleDetailDialog({ postId, onClose }: ArticleDetailDi
     relative bg-white rounded-xl overflow-hidden w-full max-w-4xl
     transition-all duration-300 transform
     ${loading ? 'scale-95 opacity-0' : 'scale-100 opacity-100'}
-    ${isFullscreen ? 'h-screen max-w-none m-0' : 'max-h-[90vh]'}
+    max-h-[90vh]
   `;
 
   if (!post && !loading) {
@@ -84,26 +83,16 @@ export default function ArticleDetailDialog({ postId, onClose }: ArticleDetailDi
         {/* 操作按钮 */}
         <div className="absolute top-4 right-4 z-10 flex items-center space-x-2">
           <button
-            onClick={handleFullscreenToggle}
-            className="p-2 rounded-full bg-white/80 hover:bg-white text-gray-600 hover:text-blue-600 transition-colors"
+            onClick={handleGoToDetailPage}
+            className="p-2 rounded-full bg-white/80 hover:bg-white text-gray-600 hover:text-blue-600 transition-colors flex items-center"
+            title="查看文章详情"
           >
-            <svg 
-              viewBox="0 0 24 24" 
-              className="w-5 h-5"
-              fill="none" 
-              stroke="currentColor" 
-              strokeWidth="2"
-            >
-              {isFullscreen ? (
-                <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" />
-              ) : (
-                <path d="M15 3h6v6M9 21H3v-6M21 9v6h-6M3 9v6h6" />
-              )}
-            </svg>
+            <IconLink className="w-5 h-5" />
           </button>
           <button
             onClick={handleClose}
             className="p-2 rounded-full bg-white/80 hover:bg-white text-gray-600 hover:text-red-600 transition-colors"
+            title="关闭"
           >
             <IconClose />
           </button>

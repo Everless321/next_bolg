@@ -39,6 +39,7 @@ model user {
   userEmail   String?   @map("user_email") @db.VarChar(255)
   avatar      String?   @db.VarChar(255)                      // 用户头像
   bio         String?   @db.Text                              // 用户简介
+  isAdmin     Boolean   @default(false) @map("is_admin")      // 是否是超级管理员
   comments    comment[]                                       // 用户评论关联
 }
 

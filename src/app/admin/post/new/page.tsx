@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Form, Input, Button, Message, Select } from '@arco-design/web-react';
 import { useRouter } from 'next/navigation';
 import { Editor } from '@/components/editor';
-import {MDEitor} from '@uiw/react-md-editor';
+// import {MDEitor} from '@uiw/react-md-editor';
 
 const FormItem = Form.Item;
 
@@ -16,7 +16,7 @@ interface FormValues {
 
 export default function NewPost() {
   const [loading, setLoading] = useState(false);
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState<string>('');
   const [form] = Form.useForm<FormValues>();
   const router = useRouter();
 
@@ -28,26 +28,34 @@ export default function NewPost() {
 
     try {
       setLoading(true);
-      const response = await fetch('/admin/post/new/api', {
+      
+      // 使用自定义路由处理器来创建文章
+      const response = await fetch('/api', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          title: values.title,
-          content: content,
-          status: values.status,
+          router: 'post.create',
+          params: {
+            title: values.title,
+            content: content,
+            status: values.status,
+          }
         }),
       });
 
-      if (!response.ok) {
-        throw new Error('创建文章失败');
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error(result.message || '创建文章失败');
       }
 
-      Message.success('创建成功');
+      Message.success(result.message || '创建成功');
       router.push('/admin/post');
-    } catch {
-      Message.error('创建文章失败');
+    } catch (error) {
+      console.error('创建文章失败', error);
+      Message.error(error instanceof Error ? error.message : '创建文章失败');
     } finally {
       setLoading(false);
     }
@@ -85,14 +93,11 @@ export default function NewPost() {
             label="内容"
             field="content"
           >
-            {/* <MDEitor
-            value={content}
-            onChange={setContent}
-            > */}
-
-            </MDEitor>
-            
-            
+            {/* 使用类型断言处理可能的undefined值 */}
+            <Editor
+              value={content}
+              onChange={(value) => setContent(value || '')}
+            />
           </FormItem>
 
           <FormItem

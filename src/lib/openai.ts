@@ -10,7 +10,7 @@ const titleSchema = z.object({
 })
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: "xai-cBKJmhKRD0i8sHKJZGuwAZ830yvag12Cws66KJsiJlUaaqmKR5jfZTgc6YfOu2Ko36YKibCFQW2NsIhr",
   baseURL: "https://api.x.ai/v1"
 
 });

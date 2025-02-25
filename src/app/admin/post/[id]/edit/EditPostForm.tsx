@@ -12,36 +12,51 @@ interface EditPostFormProps {
   post: Post;
 }
 
+interface FormValues {
+  title: string;
+  status: string;
+}
+
 export default function EditPostForm({ post }: EditPostFormProps) {
   const [form] = Form.useForm();
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
-  const [content, setContent] = useState(post.content || '');
+  const [content, setContent] = useState<string>(post.content || '');
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: FormValues) => {
     try {
       setSubmitting(true);
-      const response = await fetch(`/api/posts/${post.ID}`, {
-        method: 'PUT',
+      
+      // 使用自定义路由处理器来更新文章
+      const response = await fetch('/api', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          ...values,
-          content,
+          router: 'post.update',
+          params: {
+            id: post.ID,
+            title: values.title,
+            content: content,
+            status: values.status,
+          }
         }),
       });
 
-      if (!response.ok) {
-        throw new Error('更新失败');
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error(result.message || '更新失败');
       }
 
-      Message.success('文章更新成功');
+      Message.success(result.message || '文章更新成功');
+      
       router.push('/admin/post');
       router.refresh();
     } catch (error) {
       console.error('文章更新失败', error);
-      Message.error('文章更新失败');
+      Message.error(error instanceof Error ? error.message : '文章更新失败');
     } finally {
       setSubmitting(false);
     }
@@ -52,8 +67,8 @@ export default function EditPostForm({ post }: EditPostFormProps) {
       <Form
         form={form}
         initialValues={{
-          title: post.title,
-          status: post.status,
+          title: post.title || '',
+          status: post.status || 'draft',
         }}
         onSubmit={handleSubmit}
         className="space-y-6"
@@ -70,7 +85,7 @@ export default function EditPostForm({ post }: EditPostFormProps) {
         <FormItem label="文章内容" rules={[{ required: true, message: '请输入文章内容' }]}>
           <Editor
             value={content}
-            onChange={value => setContent(value)}
+            onChange={(value: string) => setContent(value)}
           />
         </FormItem>
 
